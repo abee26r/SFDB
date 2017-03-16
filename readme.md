@@ -9,7 +9,7 @@ The details are as follows:
  
 User can create table from a selection (s) of above UI . the URL for table creation is : 
 http://localhost:8087/createTable?objectName=<<SF Object API Name>>
- 
+ "Failed to invoke describeSobject."
 4. Get the differnce of Object vs Database definitions including field definitions. Use the Url : 
 http://localhost:8087/SfDbObjectStructureDifferenceIdentifier
 5. The output of aboev could be as follows:
@@ -41,3 +41,18 @@ http://salesforcedatamanager.cloudhub.io/SfDbObjectStructureDifferenceIdentifier
 http://salesforcedatamanager.cloudhub.io/createTable?objectName=Goal__C
 http://salesforcedatamanager.cloudhub.io/alterTable?objectName=Goal__C&alterFields=IsDeleted~Name
 http://salesforcedatamanager.cloudhub.io/SyncSalesforce
+
+{
+	"isDifferent" : "true"
+	difference : [{
+						"objectName":"A1", 
+						isMissing : "false",
+						"missingColumns" : ["a","b"]
+					},
+					{
+						"objectName":"A1", 
+						isMissing : "true",
+						"missingColumns" : null
+					}
+					]
+}

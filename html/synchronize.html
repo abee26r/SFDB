@@ -1,4 +1,31 @@
 
-<div ng-controller="HomeController" >
-        {{abc}} {{4+3}}
+<div ng-controller="SyncController" >
+        <div class="h2">
+                Synchronize Objects
+        </div>
+        <div class="panel panel-default">
+                <div class="panel-heading">
+                <button type="button" class="btn btn-default btn-sm" ng-click="">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Collapse
+                </button>
+                <button type="button" class="btn btn-default btn-sm" ng-click="">
+                        <span class="glyphicon glyphicon-minus" aria-hidden="true"  ></span> Expand
+                </button>
+                
+                <button type="button" class="btn btn-info btn-sm pull-right" ng-click="">
+                        <span class="glyphicon glyphicon-open" aria-hidden="true"></span> Synchronize Data
+                </button>
+
+                <button ng-if="tables.isDifferent" type="button" class="btn btn-warning btn-sm pull-right" ng-click=""  style="margin-right: 20px !important;">
+                        <span class="glyphicon glyphicon-open" aria-hidden="true"></span> Synchronize Objects
+                </button>
+                </div>
+                <div style="height: 200px;" ng-if="!tables.isDifferent">
+                        <p class="h3 text-center">No difference in tables</p>
+                </div>
+                <div style="height: 500px; overflow-y: auto;" ng-if="tables.isDifferent">
+                        <ul>
+                                <li>
+                </div>
+        </div>
 </div>

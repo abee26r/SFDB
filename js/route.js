@@ -5,7 +5,7 @@
         $scope.abc = 'Abee';
     }]);
 
-    app.controller('ManageObjController', ['$scope', 'getObjects', function($scope, getObjects){
+    app.controller('ManageObjController', ['$scope', 'getObjects', 'createTable', function($scope, getObjects, createTable){
         //$scope.objs = getObjects();@@TODO 
         $scope.objs = res1;
         
@@ -17,14 +17,16 @@
         	angular.forEach($scope.objs, function(obj){ 
         		if(obj.checkbox){
         			console.log(obj.sfObjectName);
+              $scope.tempObj = obj.sfObjectName;
+              createTable();
         		}        		
         	});
         }
         
         $scope.countA = $scope.objs.length;
         $scope.countP = 0;
-    	$scope.countC = 0;
-		$scope.countS = 0; 
+    	  $scope.countC = 0;
+		    $scope.countS = 0; 
         calcCount($scope);
         
         $scope.updateSaveCount = function(e){
@@ -36,6 +38,11 @@
         
         
     }]);
+    app.controller('SyncController', [ '$scope', function($scope){
+        var resp = res2;
+        $scope.tables = parseResp(resp);
+
+    }]);
     app.config(['$locationProvider', function($locationProvider) {
         $locationProvider.hashPrefix('');
     }]);
@@ -45,11 +52,11 @@
             templateUrl : './html/home.html',
             controller : 'HomeController'
         })
-        .when('/', {
+        .when('/manage', {
             templateUrl : './html/manage.html',
             controller : 'ManageObjController'
         })
-        .when('/synchronize', {
+        .when('/', {//synchronize
             templateUrl : './html/synchronize.html',
             controller : 'HomeController'
         });
@@ -78,6 +85,34 @@ function calcCount($scope){
 			$scope.countC++;
 		}
 	});
+}
+
+function parseResp(data){
+  var res = {};
+  var fc = 'Field(s) is missing - [', tc = 'Table is missing';
+  if(true){
+    res.isDifferent = true;
+    var arr = [];
+    for(item in data){
+      var x = {};
+      x.objectName = item;      
+      var temp = data[item];
+      if(temp == tc){
+        x.isMissing=true;
+      }else if(temp.indexOf(fc) > -1){
+        var cols = [];
+        temp = temp.replace(fc, '').replace(']', '');
+        console.log(temp);
+        x.missingColumns= temp.split(', ');
+      }
+      arr.push(x);
+    }
+    res.difference = arr;
+  }else{
+    res.isDifferent = false;
+  }
+  console.log(res.difference);
+  return res;
 }
 
 var res1 = [{
@@ -2341,3 +2376,5 @@ var res1 = [{
     "createSfObject":false
   }
 ];
+
+var res2 = {"INT_GOAL__C":"Field(s) is missing - [IsDeleted, Name]","INT_CONTACT":"Table is missing"};
