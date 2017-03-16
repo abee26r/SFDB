@@ -5,14 +5,14 @@
         </div>
         <div class="panel panel-default">
                 <div class="panel-heading">
-                <button type="button" class="btn btn-default btn-sm" ng-click="">
+                <button type="button" class="btn btn-default btn-sm" ng-show="isCollapse" ng-click="isCollapse = false">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Collapse
                 </button>
-                <button type="button" class="btn btn-default btn-sm" ng-click="">
+                <button type="button" class="btn btn-default btn-sm" ng-show="!isCollapse" ng-click="isCollapse = true">
                         <span class="glyphicon glyphicon-minus" aria-hidden="true"  ></span> Expand
                 </button>
                 
-                <button type="button" class="btn btn-info btn-sm pull-right" ng-click="">
+                <button type="button" class="btn btn-info btn-sm pull-right" ng-click="inProgress = true">
                         <span class="glyphicon glyphicon-open" aria-hidden="true"></span> Synchronize Data
                 </button>
 
@@ -24,8 +24,25 @@
                         <p class="h3 text-center">No difference in tables</p>
                 </div>
                 <div style="height: 500px; overflow-y: auto;" ng-if="tables.isDifferent">
-                        <ul>
-                                <li>
+                        <ul class="list-group" style="margin-bottom: 0;" ng-repeat="table in tables.difference">
+                        	<li class="list-group-item" >
+                        		<span class="badge badge-missing" ng-if="!table.isMissing && !isCollapse">Column Missing</span>
+                        		<span class="badge badge-found" ng-if="!table.isMissing">Table</span>
+                        		<span class="badge badge-missing" ng-if="table.isMissing">Table Missing</span>
+                        		<font class="h4">{{table.objectName}}</font>
+                        		<button type="button" class="btn btn-info btn-sm pull-left" ng-click="syncObject(table.objectName, table.missingColumns)" style="margin: 0 20px 5px 0;">
+				                        <span class="glyphicon glyphicon-open" aria-hidden="true"></span> Synchronize
+				                </button>                      		
+                        	</li>
+                        	<li class="list-group-item" ng-show="isCollapse" style="padding: 0px;" ng-if="!table.isMissing" >
+                        		<ul class="list-group"  style="padding: 0px; margin-bottom: 0;">
+                        			<li class="list-group-item" ng-repeat="cols in table.missingColumns">                        				
+                        				<span class="badge badge-missing">Column Missing</span>
+                        				<em>{{cols}}</em>
+                        			</li>                        			
+                        		</ul>                        		
+                        	</li>
+                        </ul>
                 </div>
         </div>
 </div>

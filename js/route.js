@@ -41,7 +41,19 @@
     app.controller('SyncController', [ '$scope', function($scope){
         var resp = res2;
         $scope.tables = parseResp(resp);
-
+        $scope.isCollapse = true;
+        
+        $scope.syncObject = function(table, diff){
+        	console.log(table);
+        	console.log(diff);
+        }
+        
+        $scope.syncAllObject = function(){
+        	angular.forEach($scope.tables.difference, function(table){ 
+        		        		
+        	});
+        }
+        $scope.inProgress = false;
     }]);
     app.config(['$locationProvider', function($locationProvider) {
         $locationProvider.hashPrefix('');
@@ -64,6 +76,12 @@
     app.directive('topNav', function(){
         return {
             templateUrl: './html/nav.html'
+        };
+    });
+    
+    app.directive('progress', function(){
+        return {
+            templateUrl: './html/progress.html'
         };
     });
 
@@ -111,7 +129,6 @@ function parseResp(data){
   }else{
     res.isDifferent = false;
   }
-  console.log(res.difference);
   return res;
 }
 
