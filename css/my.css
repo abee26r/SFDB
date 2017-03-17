@@ -1,3 +1,4 @@
+
 .table-fixed thead {
   width: 97%;
 }
@@ -36,4 +37,9 @@
 }
 .table-bordered > tbody > :hover, .list-group-item:hover {
   background-color: #ececec;
+}
+
+.scldiv{
+	height: 65vh; 
+	overflow-y: auto;
 }

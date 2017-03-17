@@ -8,9 +8,19 @@
     app.controller('ManageObjController', ['$scope', 'getObjectsService', 'createTableService', function($scope, getObjectsService, createTable){
         //$scope.objs = getObjectsService();@@TODO 
         $scope.objs = res1;
+        $scope.countA = $scope.objs.length;
+        $scope.countP = 0;
+    	$scope.countC = 0;
+		$scope.countS = 0; 
+        calcCount($scope);
         
         $scope.selectAll = function(){
-        	angular.forEach($scope.objs, function(obj){ obj.checkbox = $scope.allSelect; });
+        	var c=0;
+        	angular.forEach($scope.objs, function(obj){ 
+        		obj.checkbox = $scope.allSelect; 
+        		$scope.allSelect ? c++ : 0;
+        		});
+        	$scope.countS = c;
         }
         
         $scope.saveObjects = function(){
@@ -22,12 +32,6 @@
         		}        		
         	});
         }
-        
-        $scope.countA = $scope.objs.length;
-        $scope.countP = 0;
-    	  $scope.countC = 0;
-		    $scope.countS = 0; 
-        calcCount($scope);
         
         $scope.updateSaveCount = function(e){
         	if(e)

@@ -14,11 +14,14 @@
             <button type="button" class="btn btn-primary btn-sm" ng-click="search = {}">
                 <span class="glyphicon glyphicon-star" aria-hidden="true"></span> All {{countA}}
             </button>
+            <button type="button" class="btn btn-primary btn-sm" ng-show="countS > 0" ng-click="search = {checkbox:true}">
+                <span class="glyphicon glyphicon-check" aria-hidden="true"></span> Selected {{countS}}
+            </button>
             <button type="button" class="btn btn-info btn-sm pull-right" ng-click="saveObjects()">
                 <span class="glyphicon glyphicon-open" aria-hidden="true"></span> Save {{countS}}
             </button>
         </div>
-        <div style="height: 600px; overflow-y: auto;">
+        <div class="scldiv">
 	       	<table class="table table-bordered">
 			  <thead>
 			    <tr>
