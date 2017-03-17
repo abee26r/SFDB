@@ -38,7 +38,7 @@
         
         
     }]);
-    app.controller('SyncController', [ '$scope', function($scope){
+    app.controller('SyncController', [ '$scope', 'progressService', function($scope, progressService){
         var resp = res2;
         $scope.tables = parseResp(resp);
         $scope.isCollapse = true;
@@ -53,7 +53,8 @@
         		        		
         	});
         }
-        $scope.inProgress = false;
+        $scope.inProgress = false;        
+        $scope.$watch('inProgress', progressService.openModal);
     }]);
     app.config(['$locationProvider', function($locationProvider) {
         $locationProvider.hashPrefix('');
