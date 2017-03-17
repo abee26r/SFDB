@@ -34,3 +34,6 @@
     min-width: 28px;
     border-radius: 2px;
 }
+.table-bordered > tbody > :hover, .list-group-item:hover {
+  background-color: #ececec;
+}
