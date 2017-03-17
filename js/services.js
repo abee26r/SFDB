@@ -1,25 +1,12 @@
 angular.module('cusServices', ['ngResource','ui.bootstrap'])
-    .constant('urls', {
+    .constant('myOpts', {
         domain : 'http://salesforcedatamanager.cloudhub.io',
         globalObjectsUrl : this.domain + '/globalObjects',
-        diffUrl : + '/SfDbObjectStructureDifferenceIdentifier',
+        diffUrl : this.domain + '/SfDbObjectStructureDifferenceIdentifier',
         createTblUrl : this.domain + '/createTable?objectName=:tbl',
         alterTableUrl : this.domain + '/alterTable?objectName=:tbl&alterFields=:fields',
         SyncSalesforceUrl : this.domain + '/SyncSalesforce',
-    })
-    .factory('globalObjectService', ['urls', function ($resource, urls) {
-        return $resource(urls.globalObjectsUrl);
-    }])
-    .factory('createTableService', ['urls', function ($resource, urls) {
-        return $resource(urls.createTblUrl, [{tbl:'@table'}]);
-    }])
-    .service('getObjects', ['globalObjectService', function(globalObjectService){
-        return globalObjectService.query();
-    }])
-    .service('createTable', ['createTableService', function(createTableService){
-        return createTableService.get();
-    }])
-    .controller('ModalController', ['$scope', 'progressService', function($scope, progressService){
+    }).controller('ModalController', ['$scope', 'progressService', function($scope, progressService){
         $scope.stext ='Processing..';
         $scope.progressData = progressService.progressData;
         $scope.$watch(progressService.progressData, function(newVal){
@@ -27,6 +14,30 @@ angular.module('cusServices', ['ngResource','ui.bootstrap'])
         }, true);
         
     }])
+    .factory('globalObjectResource', function ($resource, myOpts) {
+        return $resource(myOpts.globalObjectsUrl);
+    })
+    .factory('createTableResource', function ($resource, myOpts) {
+        return $resource(myOpts.createTblUrl);
+    })
+    .factory('alterTableResource', function ($resource, myOpts) {
+        return $resource(myOpts.alterTableUrl);
+    })
+    .factory('syncDataResource', function ($resource, myOpts) {
+        return $resource(myOpts.createTblUrl);
+    })
+    .service('getObjectsService', ['globalObjectResource', function(globalObjectResource){
+        return globalObjectResource.query();
+    }])
+    .service('createTableService', ['createTableResource', function(createTableResource, data){
+        return createTableResource.get({},data);
+    }])
+    .service('alterTableService', ['alterTableResource', function(alterTableResource, data){
+        return alterTableResource.get({}, data);
+    }])
+    .service('syncDataService', ['syncDataResource', function(syncDataResource){
+        return syncDataResource.get();
+    }])    
     .service('progressService', function($uibModal, $rootScope){
         return {
             openModal : function(val){

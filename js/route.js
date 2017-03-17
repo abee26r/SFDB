@@ -5,8 +5,8 @@
         $scope.abc = 'Abee';
     }]);
 
-    app.controller('ManageObjController', ['$scope', 'getObjects', 'createTable', function($scope, getObjects, createTable){
-        //$scope.objs = getObjects();@@TODO 
+    app.controller('ManageObjController', ['$scope', 'getObjectsService', 'createTableService', function($scope, getObjectsService, createTable){
+        //$scope.objs = getObjectsService();@@TODO 
         $scope.objs = res1;
         
         $scope.selectAll = function(){
@@ -16,9 +16,9 @@
         $scope.saveObjects = function(){
         	angular.forEach($scope.objs, function(obj){ 
         		if(obj.checkbox){
-        			console.log(obj.sfObjectName);
-              $scope.tempObj = obj.sfObjectName;
-              createTable();
+              var data = {};
+        			data.tbl = obj.sfObjectName;
+              createTableService({}, data);
         		}        		
         	});
         }
@@ -61,7 +61,7 @@
     }]);
     app.config(function($routeProvider) {
     $routeProvider
-        .when('/s', {
+        .when('/', {
             templateUrl : './html/home.html',
             controller : 'HomeController'
         })
@@ -69,7 +69,7 @@
             templateUrl : './html/manage.html',
             controller : 'ManageObjController'
         })
-        .when('/', {//synchronize
+        .when('/synchronize', {
             templateUrl : './html/synchronize.html',
             controller : 'HomeController'
         });
