@@ -1,11 +1,8 @@
 (function(){
     var app = angular.module('sfdbApp', ['ngRoute', 'cusServices']);
 
-    app.controller('HomeController', [ '$scope', function($scope){
-        $scope.abc = 'Abee';
-    }]);
-
-    app.controller('ManageObjController', ['$scope', 'getObjectsService', 'createTableService', function($scope, getObjectsService, createTable){
+    app.controller('ManageObjController', ['$scope', 'webServiceFactory', 'progressService',
+                                           function($scope, webServiceFactory, progressService){
         //$scope.objs = getObjectsService();@@TODO 
         $scope.objs = res1;
         $scope.countA = $scope.objs.length;
@@ -24,24 +21,42 @@
         }
         
         $scope.saveObjects = function(){
+        	var progress = progressService.progressData;
+        	progress.progressText = 'Calculating objects..';
+        	progressService.openModal();
+        	var dataArr = [];
         	angular.forEach($scope.objs, function(obj){ 
         		if(obj.checkbox){
-              var data = {};
-        			data.tbl = obj.sfObjectName;
-              createTableService({}, data);
+        			var data = {};
+        			data.objectName = obj.sfObjectName;
+        			dataArr.push(data);
         		}        		
         	});
+        	
+        	progress.progressText = 'Creating tables..';
+        	progress.max = dataArr.length;
+        	
+        	angular.forEach(dataArr, function(data){
+        		webServiceFactory.createTableService(data, function(d){
+        			console.log(d);
+        			progress.count++;
+        			if(progress.max == progress.count)
+        				progress.complete = true;
+        		},function(d){
+        			console.log(progress.count);
+        			progress.count++;
+        		});
+        	});
+        	
+        	$scope.inProgress = false;
         }
         
         $scope.updateSaveCount = function(e){
-        	if(e)
-        		$scope.countS++;
-        	else
-        		$scope.countS--;
+        	e ? $scope.countS++ : $scope.countS--;
         }
         
-        
     }]);
+    
     app.controller('SyncController', [ '$scope', 'progressService', function($scope, progressService){
         var resp = res2;
         $scope.tables = parseResp(resp);
@@ -58,24 +73,21 @@
         	});
         }
         $scope.inProgress = false;        
-        $scope.$watch('inProgress', progressService.openModal);
+        $scope.$watch('inProgress', progressService.openModal());
     }]);
     app.config(['$locationProvider', function($locationProvider) {
         $locationProvider.hashPrefix('');
     }]);
+    
     app.config(function($routeProvider) {
     $routeProvider
         .when('/', {
-            templateUrl : './html/home.html',
-            controller : 'HomeController'
-        })
-        .when('/manage', {
             templateUrl : './html/manage.html',
             controller : 'ManageObjController'
         })
         .when('/synchronize', {
             templateUrl : './html/synchronize.html',
-            controller : 'HomeController'
+            controller : 'SyncController'
         });
     });
     app.directive('topNav', function(){
@@ -95,8 +107,6 @@
             templateUrl: './html/footer.html'
         };
     });
-
-
     
 })();
 

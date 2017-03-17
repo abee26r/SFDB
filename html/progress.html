@@ -1,12 +1,15 @@
 <div class="modal-header">
   <h3 class="modal-title" id="modal-title">{{stext}}</h3>
 </div>
-<div class="modal-body" id="modal-body" ng-if="progressData.progressText.length() > 0">
-  {{progressData}}  
+<div class="modal-body" id="modal-body" ng-show="progressData.progressText.length() > 0">
+  {{progressData.progressText}}  
 </div>
 <div class="modal-footer">
-  <uib-progressbar class="progress-striped active" max="progressData.max > 0 ? progressData.max : 100" 
+  <uib-progressbar ng-show="!progressData.complete"  class="progress-striped active" max="progressData.max > 0 ? progressData.max : 100" 
     value="progressData.max > 0 ? progressData.count : 100" type="info">
     <font ng-if="progressData.max > 0"><i>{{progressData.count}} / {{progressData.max}}</i></font>
   </uib-progressbar>
+  <button type="button" class="btn btn-danger btn-sm" ng-show="progressData.complete" ng-click="close()">
+       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Close
+   </button>
 </div>
