@@ -35,16 +35,19 @@
         	
         	progress.progressText = 'Creating tables..';
         	progress.max = dataArr.length;
+        	progress.successArr = [];
+        	progress.failedArr = [];
         	
         	angular.forEach(dataArr, function(data){
         		webServiceFactory.createTableService(data, function(d){
+        			progress.successArr.push(data.objectName);
         			console.log(d);
         			progress.count++;
-        			if(progress.max == progress.count)
-        				progress.complete = true;
-        		},function(d){
-        			console.log(progress.count);
+        			closeModalWin(progress);
+        		},function(d){        			        			
+        			progress.failedArr.push(data.objectName);
         			progress.count++;
+        			closeModalWin(progress);
         		});
         	});
         	
@@ -57,23 +60,93 @@
         
     }]);
     
-    app.controller('SyncController', [ '$scope', 'progressService', function($scope, progressService){
+    app.controller('SyncController', [ '$scope', 'progressService', 'webServiceFactory', 
+                                       function($scope, progressService, webServiceFactory){
         var resp = res2;
         $scope.tables = parseResp(resp);
         $scope.isCollapse = true;
         
         $scope.syncObject = function(table, diff){
-        	console.log(table);
-        	console.log(diff);
+        	var progress = progressService.progressData;
+        	progressService.openModal();
+        	var data = {};
+        	if(diff){
+        		data.objectName = table;
+        		data.alterFields = diff.join('~');
+        		webServiceFactory.alterTableResource(data, function(d){
+        			progress.sText = 'Completed!';
+        			progress.progressText = 'Completed Updating : ' + data.objectName;        			
+        			progress.complete = true;
+        		}, function(d){
+        			progress.sText = 'Completed!';
+        			progress.progressText = 'Failed Updating : ' + data.objectName;        			
+        			progress.complete = true;
+        		});
+        	}else{
+    			data.objectName = table;
+    			webServiceFactory.createTableService(data, function(d){
+	    				progress.sText = 'Completed!';
+	        			progress.progressText = 'Completed creating : ' + data.objectName;        			
+	        			progress.complete = true;
+	        		},function(d){ 
+	        			progress.sText = 'Completed!';
+	        			progress.progressText = 'Failed creating : ' + data.objectName;        			
+	        			progress.complete = true;
+	        		});
+        	}
         }
         
         $scope.syncAllObject = function(){
+        	progressService.openModal();
+        	var progress = progressService.progressData;
+        	progress.max = $scope.tables.difference.length;
+        	progress.successArr = [];
+        	progress.failedArr = [];
         	angular.forEach($scope.tables.difference, function(table){ 
-        		        		
+            	
+            	var data = {};
+            	var diff = table.missingColumns;
+            	if(diff){
+            		data.objectName = table.objectName;
+            		data.alterFields = diff.join('~');
+            		webServiceFactory.alterTableResource(data, function(d){
+            			progress.successArr.push(data.objectName);
+            			progress.count++;
+            			closeModalWin(progress);
+            		}, function(d){
+            			progress.failedArr.push(data.objectName); 
+            			progress.count++;
+            			closeModalWin(progress);
+            		});
+            	}else{
+        			data.objectName = table.objectName;
+        			webServiceFactory.createTableService(data, function(d){
+	        				progress.successArr.push(data.objectName);
+	        				progress.count++;
+	            			closeModalWin(progress);
+    	        		},function(d){ 
+    	        			progress.failedArr.push(data.objectName);
+    	        			progress.count++;
+                			closeModalWin(progress);
+    	        		});
+            	}     		
         	});
         }
-        $scope.inProgress = false;        
-        $scope.$watch('inProgress', progressService.openModal());
+        
+        $scope.syncData = function(){
+        	progressService.openModal();
+        	var progress = progressService.progressData;
+        	webServiceFactory.syncDataService(function(){
+        		progress.sText = 'Completed!';
+    			progress.progressText = 'Successfully requested data sync';        			
+    			progress.complete = true;
+        	},function(){
+        		progress.sText = 'Completed!';
+    			progress.progressText = 'Data sync request failed.';        			
+    			progress.complete = true;
+        	});
+        }
+        
     }]);
     app.config(['$locationProvider', function($locationProvider) {
         $locationProvider.hashPrefix('');
@@ -145,6 +218,21 @@ function parseResp(data){
     res.isDifferent = false;
   }
   return res;
+}
+
+function closeModalWin(progress){
+	if(progress.count == progress.max){
+		progress.sText = 'Completed!';
+		progress.progressText = progress.successArr.length > 0 ? 
+				'Success : ' + progress.successArr.join(' || ') :
+					'';
+		progress.progressText2 = progress.failedArr.length > 0 ?
+				'Failed : ' + progress.failedArr.join(' || ') :
+					'';
+		
+		progress.complete = true;
+		
+	}
 }
 
 var res1 = [{

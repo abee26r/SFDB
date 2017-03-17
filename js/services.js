@@ -4,7 +4,7 @@ angular.module('cusServices', ['ngResource','ui.bootstrap'])
         globalObjectsUrl : this.domain + '/globalObjects',
         diffUrl : this.domain + '/SfDbObjectStructureDifferenceIdentifier',
         createTblUrl : this.domain + '/createTable',
-        alterTableUrl : this.domain + '/alterTable?objectName=:tbl&alterFields=:fields',
+        alterTableUrl : this.domain + '/alterTable',
         SyncSalesforceUrl : this.domain + '/SyncSalesforce',
     })
     .factory('webServiceFactory', function($resource, myOpts){
@@ -15,20 +15,19 @@ angular.module('cusServices', ['ngResource','ui.bootstrap'])
     	}
     	
 		factory.createTableService = function(data, s_cb, e_cb){
-			console.log(data);
 			return $resource(myOpts.createTblUrl).get(data, s_cb, e_cb);	
 		}
 		
-		factory.alterTableResource = function(){
-			return $resource(myOpts.alterTableUrl);
+		factory.alterTableResource = function(data, s_cb, e_cb){
+			return $resource(myOpts.alterTableUrl).get(data, s_cb, e_cb);
 		}		
 		
 		factory.getDifferenceService = function(){
-			return $resource(myOpts.createTblUrl);	
+			return $resource(myOpts.createTblUrl).get();	
 		}
 		
-		factory.syncDataResource = function(){
-			return $resource(myOpts.createTblUrl);
+		factory.syncDataService = function(s_cb, e_cb){
+			return $resource(myOpts.SyncSalesforceUrl).get({}, s_cb, e_cb);
 		}
 		
 		return factory;
@@ -46,16 +45,20 @@ angular.module('cusServices', ['ngResource','ui.bootstrap'])
 	            });                    
             },            
             progressData : {
+            	sText : 'Processing..',
                 progressText : '',
                 max : 0,
                 count : 0,
+                progressText2 : '',
                 complete : false
             },            
             closeModal : function(){
             	this.progressData = {
+            			sText : 'Processing..',
                         progressText : '',
                         max : 0,
                         count : 0,
+                        progressText2 : '',
                         complete : false
                     };
                 $rootScope.modalWin.close('stfu');
@@ -63,11 +66,11 @@ angular.module('cusServices', ['ngResource','ui.bootstrap'])
         }        
     })
     .controller('ModalController', ['$scope', 'progressService', function($scope, progressService){
-        $scope.stext ='Processing..';
+        
         $scope.progressData = progressService.progressData;
-        $scope.$watch(progressService.progressData, function(newVal){
-            $scope.progressData = newVal;
-        }, true);
+//        $scope.$watch(progressService.progressData, function(newVal){
+//            $scope.progressData = newVal;
+//        }, true);
         $scope.close = function(){progressService.closeModal(); }
         
     }]);
