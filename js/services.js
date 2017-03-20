@@ -25,7 +25,7 @@ angular.module('cusServices', ['ngResource','ui.bootstrap'])
 		}		
 		
 		factory.getDifferenceService = function(e_cb){
-			return $resource(domain + myOpts.createTblUrl).query(function(){}, e_cb);	
+			return $resource(domain + myOpts.diffUrl).get(function(){}, e_cb);	
 		}
 		
 		factory.syncDataService = function(s_cb, e_cb){

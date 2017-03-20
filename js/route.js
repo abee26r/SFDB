@@ -75,11 +75,13 @@
                                        function($scope, progressService, webServiceFactory){
     	
     	$scope.svcErr = false;
-        var resp = webServiceFactory.getDifferenceService(function(d){
+    	$scope.tables = webServiceFactory.getDifferenceService(function(d){
         	$scope.svcErr = true;
         	console.log('SyncController' +d);
         });
-        $scope.tables = parseResp(resp);
+        $scope.tables = $scope.tables.$promise.then(function(response){
+        	parseResp(response);
+        });
         $scope.isCollapse = true;
         
         $scope.syncObject = function(table, diff){
@@ -212,7 +214,8 @@ function calcCount($scope){
 function parseResp(data){
   var res = {};
   var fc = 'Field(s) is missing - [', tc = 'Table is missing';
-  if(true){
+  
+  if(!data.Difference){
     res.isDifferent = true;
     var arr = [];
     for(item in data){
@@ -224,7 +227,6 @@ function parseResp(data){
       }else if(temp.indexOf(fc) > -1){
         var cols = [];
         temp = temp.replace(fc, '').replace(']', '');
-        console.log(temp);
         x.missingColumns= temp.split(', ');
       }
       arr.push(x);
