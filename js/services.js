@@ -1,33 +1,35 @@
 angular.module('cusServices', ['ngResource','ui.bootstrap'])
+	.constant('domain' , 'http://salesforcedatamanager.cloudhub.io')
     .constant('myOpts', {
-        domain : 'http://salesforcedatamanager.cloudhub.io',
-        globalObjectsUrl : this.domain + '/globalObjects',
-        diffUrl : this.domain + '/SfDbObjectStructureDifferenceIdentifier',
-        createTblUrl : this.domain + '/createTable',
-        alterTableUrl : this.domain + '/alterTable',
-        SyncSalesforceUrl : this.domain + '/SyncSalesforce',
+        globalObjectsUrl : '/globalObjects',
+        diffUrl : '/SfDbObjectStructureDifferenceIdentifier',
+        createTblUrl : '/createTable',
+        alterTableUrl : '/alterTable',
+        SyncSalesforceUrl : '/SyncSalesforce',
     })
-    .factory('webServiceFactory', function($resource, myOpts){
+    .factory('webServiceFactory', function($resource, domain, myOpts){
     	var factory = {};
     	
-    	factory.getObjectsService = function(){
-    		return $resource(myOpts.globalObjectsUrl).query();
+    	factory.getObjectsService = function(e_cb){
+    		return $resource(domain + myOpts.globalObjectsUrl, null, {
+    			'get' :{headers :{'Access-Control-Allow-Origin' : '*'}}
+    		}).query(function(){}, e_cb);
     	}
     	
 		factory.createTableService = function(data, s_cb, e_cb){
-			return $resource(myOpts.createTblUrl).get(data, s_cb, e_cb);	
+			return $resource(domain + myOpts.createTblUrl).get(data, s_cb, e_cb);	
 		}
 		
 		factory.alterTableResource = function(data, s_cb, e_cb){
-			return $resource(myOpts.alterTableUrl).get(data, s_cb, e_cb);
+			return $resource(domain + myOpts.alterTableUrl).get(data, s_cb, e_cb);
 		}		
 		
-		factory.getDifferenceService = function(){
-			return $resource(myOpts.createTblUrl).get();	
+		factory.getDifferenceService = function(e_cb){
+			return $resource(domain + myOpts.createTblUrl).query(function(){}, e_cb);	
 		}
 		
 		factory.syncDataService = function(s_cb, e_cb){
-			return $resource(myOpts.SyncSalesforceUrl).get({}, s_cb, e_cb);
+			return $resource(domain + myOpts.SyncSalesforceUrl).get({}, s_cb, e_cb);
 		}
 		
 		return factory;
@@ -71,7 +73,9 @@ angular.module('cusServices', ['ngResource','ui.bootstrap'])
 //        $scope.$watch(progressService.progressData, function(newVal){
 //            $scope.progressData = newVal;
 //        }, true);
-        $scope.close = function(){progressService.closeModal(); }
+        $scope.close = function(){
+        	$scope.$emit('reloadData', null);
+        	progressService.closeModal(); }
         
     }]);
 

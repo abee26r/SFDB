@@ -2,8 +2,14 @@
 <div class="container" ng-controller="ManageObjController">
     <div class="h2">
         Manage Salesforce Objects
-    </div>
-    <div class="panel panel-default">
+    </div>	
+	<div class="alert alert-danger" role="alert" ng-if="svcErr">
+		Unable to contact service!
+	</div>
+	<div class="alert alert-warning" role="alert" ng-if="!svcErr && countA == 0">
+		No data!
+	</div>
+	<div class="panel panel-default" ng-if="!svcErr && objs.length > 0">
         <div class="panel-heading">
             <button type="button" class="btn btn-success btn-sm" ng-click="search = {createSfObject:true}">
                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Completed {{countC}}

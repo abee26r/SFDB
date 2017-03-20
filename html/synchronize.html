@@ -3,7 +3,10 @@
         <div class="h2">
                 Synchronize Objects
         </div>
-        <div class="panel panel-default">
+        <div class="alert alert-danger" role="alert" ng-if="svcErr">
+			Unable to contact service!
+		</div>
+        <div class="panel panel-default" ng-if="!svcErr">
                 <div class="panel-heading">
                 <button type="button" class="btn btn-default btn-sm" ng-show="isCollapse" ng-click="isCollapse = false">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Collapse

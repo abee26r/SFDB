@@ -3,13 +3,25 @@
 
     app.controller('ManageObjController', ['$scope', 'webServiceFactory', 'progressService',
                                            function($scope, webServiceFactory, progressService){
-        //$scope.objs = getObjectsService();@@TODO 
-        $scope.objs = res1;
-        $scope.countA = $scope.objs.length;
-        $scope.countP = 0;
-    	$scope.countC = 0;
-		$scope.countS = 0; 
-        calcCount($scope);
+    	
+    	$scope.loadData = function(){
+    		$scope.objs = webServiceFactory.getObjectsService(function(d){
+            	$scope.svcErr = true;
+            });
+        	
+        	$scope.objs.$promise.then(function (response) {
+        		$scope.objs = response;
+        		$scope.countA = $scope.objs.length;
+                $scope.countP = 0;
+            	$scope.countC = 0;
+        		$scope.countS = 0; 
+                calcCount($scope);
+            });
+    	}
+    	$scope.$on('reloadData', $scope.loadData);
+    	$scope.loadData();
+    	
+//      $scope.objs = res1;
         
         $scope.selectAll = function(){
         	var c=0;
@@ -41,7 +53,6 @@
         	angular.forEach(dataArr, function(data){
         		webServiceFactory.createTableService(data, function(d){
         			progress.successArr.push(data.objectName);
-        			console.log(d);
         			progress.count++;
         			closeModalWin(progress);
         		},function(d){        			        			
@@ -62,7 +73,12 @@
     
     app.controller('SyncController', [ '$scope', 'progressService', 'webServiceFactory', 
                                        function($scope, progressService, webServiceFactory){
-        var resp = res2;
+    	
+    	$scope.svcErr = false;
+        var resp = webServiceFactory.getDifferenceService(function(d){
+        	$scope.svcErr = true;
+        	console.log('SyncController' +d);
+        });
         $scope.tables = parseResp(resp);
         $scope.isCollapse = true;
         
@@ -169,11 +185,11 @@
         };
     });
     
-    app.directive('progress', function(){
-        return {
-            templateUrl: './html/progress.html'
-        };
-    });
+//    app.directive('progress', function(){
+//        return {
+//            templateUrl: './html/progress.html'
+//        };
+//    });
 
     app.directive('footerCts', function(){
         return {
@@ -220,7 +236,7 @@ function parseResp(data){
   return res;
 }
 
-function closeModalWin(progress){
+function closeModalWin(progress, $scope){
 	if(progress.count == progress.max){
 		progress.sText = 'Completed!';
 		progress.progressText = progress.successArr.length > 0 ? 
