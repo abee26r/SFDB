@@ -6,7 +6,7 @@
         <div class="alert alert-danger" role="alert" ng-if="svcErr">
 			Unable to contact service!
 		</div>
-        <div class="panel panel-default" ng-if="!svcErr">
+        <div class="panel panel-default" ng-if="!svcErr && isComplete">
                 <div class="panel-heading">
                 &nbsp; &nbsp;
                 <button type="button" class="btn btn-default btn-sm" ng-show="isCollapse && tables.isDifferent" ng-click="isCollapse = false">
@@ -21,7 +21,7 @@
                 </button>
 
                 <button ng-if="tables.isDifferent" type="button" class="btn btn-warning btn-sm pull-right" ng-click="syncAllObject()"  style="margin-right: 20px !important;">
-                        <span class="glyphicon glyphicon-open" aria-hidden="true"></span> Synchronize Objects
+                        <span class="glyphicon glyphicon-open" aria-hidden="true"></span> Sync Metadata
                 </button>
                 &nbsp; &nbsp;
                 </div>

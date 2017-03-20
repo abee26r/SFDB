@@ -80,7 +80,8 @@
         	console.log('SyncController' +d);
         });
         $scope.tables = $scope.tables.$promise.then(function(response){
-        	parseResp(response);
+        	$scope.isComplete = true;
+        	$scope.tables = parseResp(response);
         });
         $scope.isCollapse = true;
         
@@ -220,7 +221,9 @@ function parseResp(data){
     var arr = [];
     for(item in data){
       var x = {};
-      x.objectName = item;      
+      x.objectName = item;
+      if(item.startsWith("$") || item.startsWith("toJSON"))
+    	  continue;
       var temp = data[item];
       if(temp == tc){
         x.isMissing=true;
