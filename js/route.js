@@ -12,22 +12,22 @@
         	$scope.objs.$promise.then(function (response) {
         		$scope.objs = response;
         		$scope.countA = $scope.objs.length;
-                $scope.countP = 0;
-            	$scope.countC = 0;
+            $scope.countP = 0;
+            $scope.countC = 0;
         		$scope.countS = 0; 
                 calcCount($scope);
             });
     	}
     	$scope.$on('reloadData', $scope.loadData);
     	$scope.loadData();
-    	
+    	$scope.selecta = {all : false,};
 //      $scope.objs = res1;
         
         $scope.selectAll = function(){
-        	var c=0;
+        	var c=0;          
         	angular.forEach($scope.objs, function(obj){ 
-        		obj.checkbox = $scope.allSelect; 
-        		$scope.allSelect ? c++ : 0;
+        		obj.checkbox = $scope.selecta.all; 
+        		$scope.selecta.all ? c++ : 0;
         		});
         	$scope.countS = c;
         }
