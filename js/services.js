@@ -64,7 +64,11 @@ angular.module('cusServices', ['ngResource','ui.bootstrap'])
                         complete : false
                     };
                 $rootScope.modalWin.close('stfu');
-            }
+            },
+            reload : function(){
+    			window.location.reload();
+    		}
+            
         }        
     })
     .controller('ModalController', ['$scope', 'progressService', function($scope, progressService){
@@ -74,8 +78,9 @@ angular.module('cusServices', ['ngResource','ui.bootstrap'])
 //            $scope.progressData = newVal;
 //        }, true);
         $scope.close = function(){
-        	$scope.$emit('reloadData', null);
-        	progressService.closeModal(); }
+        		progressService.reload();	
+        		progressService.closeModal();	        	       	 
+        	}
         
     }]);
 
