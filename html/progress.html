@@ -2,8 +2,8 @@
   <h3 class="modal-title" id="modal-title">{{progressData.sText}}</h3>
 </div>
 <div class="modal-body" id="modal-body" >
-  <p ng-show="progressData.progressText.length() > 0">{{progressData.progressText}}</p>
-  <p ng-show="progressData.progressText2.length() > 0">{{progressData.progressText2}}</p>
+  <p ng-show="progressData.progressText != ''">{{progressData.progressText}}</p>
+  <p ng-show="progressData.progressText2 != ''">{{progressData.progressText2}}</p>
 </div>
 <div class="modal-footer">
   <uib-progressbar ng-show="!progressData.complete"  class="progress-striped active" max="progressData.max > 0 ? progressData.max : 100" 
