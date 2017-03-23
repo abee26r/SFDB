@@ -52,7 +52,8 @@ angular.module('cusServices', ['ngResource','ui.bootstrap'])
                 max : 0,
                 count : 0,
                 progressText2 : '',
-                complete : false
+                complete : false,
+                refresh : true
             },            
             closeModal : function(){
             	this.progressData = {
@@ -61,7 +62,8 @@ angular.module('cusServices', ['ngResource','ui.bootstrap'])
                         max : 0,
                         count : 0,
                         progressText2 : '',
-                        complete : false
+                        complete : false,
+                        refresh : true
                     };
                 $rootScope.modalWin.close('stfu');
             },
@@ -78,7 +80,8 @@ angular.module('cusServices', ['ngResource','ui.bootstrap'])
 //            $scope.progressData = newVal;
 //        }, true);
         $scope.close = function(){
-        		progressService.reload();	
+                if(progressService.progressData.refresh)
+        		    progressService.reload();	
         		progressService.closeModal();	        	       	 
         	}
         

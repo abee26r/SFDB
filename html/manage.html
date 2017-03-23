@@ -43,16 +43,12 @@
 			      <td class="text-center small"><input type="text" ng-model="search.sfObjectName" class="form-control" placeholder="type to filter"/></td>			      
 			    </tr>
 			    <tr  ng-repeat="obj in objs | filter:search:strict">
-			      <td scope="row" class="text-center">
-			      	<!-- <button type="button" class="btn btn-warning" style="padding: 3px 10px 3px 10px;">
-	                   	<span style="font-size: 1.5em;"  class="glyphicon glyphicon-unchecked" aria-hidden="true"></span>
-	                   </button> -->
+			      <td scope="row" class="text-center">			      	
 	                   <input type="checkbox" ng-if="!obj.createSfObject" ng-model="obj.checkbox" value="@{{obj.checkbox}}" ng-change="updateSaveCount(obj.checkbox)"/>
-	                   <input type="checkbox" ng-if="obj.createSfObject" ng-model="obj.checkbox" value="@{{obj.checkbox}}" checked="checked" disabled="disabled"/>
+	                   <input type="checkbox" ng-if="obj.createSfObject" ng-model="obj.checkbox" value="@{{obj.checkbox}}" ng-checked="true" disabled="disabled"/>
 	                  </td>
 			      <td class="align-middle">{{obj.sfObjectLabel}}</td>
-			      <td>{{obj.sfObjectName}}</td>
-			      <!-- <td>{{obj.createSfObject}}</td> -->
+			      <td>{{obj.sfObjectName}}</td>			      
 			    </tr>
 			    </tbody>
 		    </table>

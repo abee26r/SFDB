@@ -16,17 +16,20 @@
                         <span class="glyphicon glyphicon-minus" aria-hidden="true"  ></span> Expand
                 </button>
                 
-                <button type="button" class="btn btn-info btn-sm pull-right align-center" ng-click="syncData()">
-                        <span class="glyphicon glyphicon-open" aria-hidden="true"></span> Synchronize Data
-                </button>
-
                 <button ng-if="tables.isDifferent" type="button" class="btn btn-warning btn-sm pull-right" ng-click="syncAllObject()"  style="margin-right: 20px !important;">
                         <span class="glyphicon glyphicon-open" aria-hidden="true"></span> Sync Metadata
                 </button>
                 &nbsp; &nbsp;
                 </div>
                 <div style="height: 200px;" ng-if="!tables.isDifferent">
-                        <p class="h3 text-center">No difference in tables</p>
+                        <div>
+                                <p class="h3 text-center">No difference in tables</p>
+                        </div>
+                        <div class="text-center center-block" style="margin-top: 25px;">
+                                <button type="button" class="btn btn-success btn-bg align-center" ng-click="syncData()">
+                                        <span class="glyphicon glyphicon-open" aria-hidden="true"></span> Synchronize Data
+                                </button>
+                        </div>
                 </div>
                 <div style="height: 500px; overflow-y: auto;" ng-if="tables.isDifferent">
                         <ul class="list-group" style="margin-bottom: 0;" ng-repeat="table in tables.difference">

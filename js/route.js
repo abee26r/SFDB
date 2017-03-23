@@ -26,8 +26,11 @@
         $scope.selectAll = function(){
         	var c=0;          
         	angular.forEach($scope.objs, function(obj){ 
-        		obj.checkbox = $scope.selecta.all; 
-        		$scope.selecta.all ? c++ : 0;
+				if(!obj.createSfObject){
+					obj.checkbox = $scope.selecta.all;
+        			$scope.selecta.all ? c++ : 0;
+				}
+        		
         		});
         	$scope.countS = c;
         }
@@ -38,7 +41,7 @@
         	progressService.openModal();
         	var dataArr = [];
         	angular.forEach($scope.objs, function(obj){ 
-        		if(obj.checkbox){
+        		if(obj.checkbox && !obj.createSfObject){
         			var data = {};
         			data.objectName = obj.sfObjectName;
         			dataArr.push(data);
@@ -159,10 +162,12 @@
         		progress.sText = 'Completed!';
     			progress.progressText = 'Successfully requested data sync';        			
     			progress.complete = true;
+				progress.refresh = false;
         	},function(){
         		progress.sText = 'Completed!';
     			progress.progressText = 'Data sync request failed.';        			
     			progress.complete = true;
+				progress.refresh = false;
         	});
         }
         
