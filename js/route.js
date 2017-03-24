@@ -192,6 +192,25 @@
             templateUrl: './html/nav.html'
         };
     });
+	app.directive('diHref', ['$location', '$route',
+        function($location, $route) {
+    return function(scope, element, attrs) {
+        scope.$watch('diHref', function() {
+            if(attrs.diHref) {
+                element.attr('href', attrs.diHref);
+                element.bind('click', function(event) {
+                    scope.$apply(function(){
+						var p = $location.path().replace('#', '').replace('/','');
+						var hr = attrs.diHref.replace('#', '').replace('/','');
+
+						console.log(p, '--', hr)
+                        if(p == hr) $route.reload();
+                    });
+                });
+            }
+        });
+    }
+}]);
     
 //    app.directive('progress', function(){
 //        return {
