@@ -23,7 +23,7 @@
             <button type="button" class="btn btn-primary btn-sm" ng-show="countS > 0" ng-click="search = {checkbox:true}">
                 <span class="glyphicon glyphicon-check" aria-hidden="true"></span> Selected {{countS}}
             </button>
-            <button type="button" class="btn btn-info btn-sm pull-right" ng-click="saveObjects()">
+            <button type="button" class="btn btn-info btn-sm pull-right" ng-click="saveObjects()" ng-if="countS > 0">
                 <span class="glyphicon glyphicon-open" aria-hidden="true"></span> Sync Metadata {{countS}}
             </button>
         </div>
